@@ -57,8 +57,14 @@ return new class extends Migration
             )
         ");
 
+        DB::statement("
+            CREATE UNIQUE INDEX uq_wallet_transactions_refund_once
+            ON wallet_transactions (booking_id, type)
+            WHERE type IN ('student_refund', 'center_refund')
+        ");
+
         DB::unprepared(<<<'SQL'
-            CREATE FUNCTION prevent_wallet_transaction_mutation()
+            CREATE OR REPLACE FUNCTION prevent_wallet_transaction_mutation()
             RETURNS TRIGGER AS $$
             BEGIN
                 RAISE EXCEPTION 'Wallet transactions are immutable';

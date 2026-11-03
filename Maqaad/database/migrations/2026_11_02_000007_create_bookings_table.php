@@ -74,6 +74,20 @@ return new class extends Migration
 
         DB::statement("
             ALTER TABLE bookings
+            ADD CONSTRAINT chk_bookings_confirmed_snapshots
+            CHECK (
+                status <> 'confirmed'
+                OR (
+                    charged_amount IS NOT NULL
+                    AND commission_rate_snapshot IS NOT NULL
+                    AND commission_amount IS NOT NULL
+                    AND confirmed_at IS NOT NULL
+                )
+            )
+        ");
+
+        DB::statement("
+            ALTER TABLE bookings
             ADD CONSTRAINT chk_bookings_waitlisted_without_charge
             CHECK (
                 status <> 'waitlisted'

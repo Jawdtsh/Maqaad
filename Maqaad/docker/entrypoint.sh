@@ -1,3 +1,4 @@
+#!/bin/sh
 
 set -e
 
@@ -10,11 +11,6 @@ if ! grep -q '^APP_KEY=base64:' .env; then
 fi
 
 php artisan migrate --force
-
-STUDENT_COUNT=$(php artisan tinker --execute="echo DB::table('students')->count();" | tail -n 1)
-
-if [ "$STUDENT_COUNT" = "0" ]; then
-    php artisan db:seed --force
-fi
+php artisan db:seed --force
 
 exec php artisan serve --host=0.0.0.0 --port=8000

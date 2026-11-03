@@ -38,6 +38,7 @@ services:
       retries: 20
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init/01-create-test-database.sql:/docker-entrypoint-initdb.d/01-create-test-database.sql:ro
 
 volumes:
   postgres_data:

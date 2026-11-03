@@ -1,0 +1,1 @@
+CREATE DATABASE maqad_test;
