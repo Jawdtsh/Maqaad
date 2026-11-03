@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Booking\Exceptions\BookingException;
+use App\Modules\Booking\Exceptions\BookingValidationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+
         $exceptions->render(function (
             BookingException $exception,
             Request $request
@@ -25,4 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
                 'message' => $exception->getMessage(),
             ], $exception->httpStatus);
         });
+
+        $exceptions->render(function (
+            BookingValidationException $exception,
+            Request $request
+        ) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], $exception->httpStatus);
+        });
+
     })->create();
